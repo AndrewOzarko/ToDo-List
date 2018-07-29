@@ -45,10 +45,11 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form action="/todo" method="post">
+                            {{ csrf_field() }}
                             <fieldset>
                                 <div class="form-group">
-                                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                                    <textarea name="body" class="form-control" rows="3"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Add</button>
