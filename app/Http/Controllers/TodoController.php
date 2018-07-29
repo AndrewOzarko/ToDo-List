@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Task;
 use Illuminate\Http\Request;
 
 class TodoController extends Controller
@@ -13,7 +14,8 @@ class TodoController extends Controller
      */
     public function index()
     {
-        return view('main.index');
+        $tasks = Task::all();
+        return view('main.index', compact('tasks'));
     }
 
     /**
@@ -34,7 +36,13 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
+        $request->validate([
+            'body' => 'required | unique:tasks'
+        ]);
+        $task = new Task();
+        $task->body = $request->body;
+        $task->save();
+        return redirect('/');
     }
 
     /**
