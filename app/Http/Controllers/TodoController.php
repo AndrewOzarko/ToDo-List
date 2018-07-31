@@ -18,75 +18,52 @@ class TodoController extends Controller
         return view('main.index', compact('tasks'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'body' => 'required | unique:tasks'
+        $this->validate($request, [
+            'text' => 'required | max: 600'
         ]);
-        $task = new Task();
-        $task->body = $request->body;
+
+        $task = new Task;
+        $task->body = $request->text;
         $task->save();
-        return redirect('/');
+
+        return 'done';
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function delete(Request $request) {
+
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        Task::where('id', $request->id)->delete();
+
+        return 'done';
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+    public function update(Request $request) {
+        //Task::where('id', $request->id)->update(['body' => $request->text]);
+
+        $this->validate($request, [
+            'text' => 'required | max: 600',
+            'id' => 'required'
+        ]);
+
+        $task = Task::find($request->id);
+        $task->body = $request->text;
+        $task->save();
+
+        return 'done';
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+    public function search() {
+        $tasks = null;
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        foreach (Task::all() as $task) {
+            $tasks[] = $task->body;
+        }
+
+        return $tasks ? $tasks : 'none';
     }
 }

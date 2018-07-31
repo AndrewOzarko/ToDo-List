@@ -13,4 +13,10 @@
 
 Route::get('/', 'TodoController@index');
 
-Route::resource('todo', 'TodoController');
+Route::post('create', 'TodoController@create');
+
+Route::post('delete', 'TodoController@delete');
+
+Route::post('update', 'TodoController@update');
+
+Route::get('api/search', 'TodoController@search');
